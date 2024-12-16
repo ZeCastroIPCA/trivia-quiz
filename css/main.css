@@ -1,106 +1,33 @@
 
 /* CONTAINER */
-.container {
+#container {
     width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: whitesmoke;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
-.name-input {
-    min-width: 300px;
-    min-height: 200px;
+.naming {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    border-radius: 1rem;
-    box-shadow: 0px 0px 8px 0px rgb(32, 32, 32);
-    background-color: rgba(245, 245, 245, 0.452);
-    animation: slide-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    gap: 1rem;
 }
 
-@keyframes slide-bottom {
-    0% {
-        opacity: 0;
-        transform: translateY(-100px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.naming h1 {
+    font-size: 2.5rem;
 }
 
-.name-input h1 {
-    text-align: center;
-    font-size: 3vw;
-    font-weight: 300;
-    color: rgb(0, 71, 71);
+.naming button {
+    padding: 0.5rem 1.5rem;
+    background-color: var(--teal);
+    color: var(--white);
 }
-
-.name-input button {
-    position: relative;
-    width: 30%;
-    height: 15%;
-    border-radius: 1vh;
-    border: solid 2px teal;
-    color: rgb(0, 75, 75);
-    background-color: rgba(0, 128, 128, 0.288);
-    transition: 0.3s;
-    font-size: 2vh;
-    font-weight: 500;
-    margin-top: 1vh;
-}
-
-.name-input button:hover {
-    width: 32%;
-    border: solid 2px teal;
-    transition: 0.3s;
-}
-
-.name-input button:active {
-    color: rgb(0, 75, 75);
-    background-color: rgba(0, 82, 82, 0.493);
-    transition: 0.1s;
-}
-
-.name-input input {
-    margin-top: 1vh;
-    width: 50%;
-    height: 20%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5vh;
-    border: solid 2px rgb(0, 75, 75);
-    transition: 0.3s;
-    background-color: whitesmoke;
-    color: teal;
-    padding-left: 1vh;
-    padding-right: 1vh;
-}
-
-.name-input input:hover {
-    height: 22%;
-    transition: 0.3s;
-}
-
-.name-input input:focus {
-    height: 22%;
-    transition: 0.3s;
-}
-
 
 /* CONTAINER 1 */
-
-.container1 {
+#container1 {
     width: 100vw;
     height: 100vh;
     display: none;
@@ -108,9 +35,6 @@
     align-items: center;
     justify-content: center;
     background-color: whitesmoke;
-    /*background-image: url(images/background1.png);
-background-size: cover;
-background-position: center;*/
 }
 
 .nav {
@@ -235,8 +159,7 @@ background-position: center;*/
 
 
 /* CONTAINER 2 */
-
-.container2 {
+#container2 {
     width: 100vw;
     height: 100vh;
     display: none;
@@ -440,8 +363,7 @@ background-position: center;*/
 
 
 /* CONTAINER 3 */
-
-.container3 {
+#container3 {
     width: 100vw;
     height: 100vh;
     display: none;

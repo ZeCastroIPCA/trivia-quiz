@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
   /* MUTED COLORS */
@@ -17,13 +16,12 @@
   --red: #be3939;
   --yellow: #f5c518;
   --orange: #fc6e51;
+  --teal: #19807b;
+  --transparent-teal: rgba(25, 128, 123, 0.5);
   --blue: #0071e3;
-  --transparent-blue: #0071e34b;
   --light-blue: #00a0e3;
   --purple: #ac92ec;
-  --paper: #e5e2ce;
-  --darkened-paper: #d1cfc1;
-  --darker-paper: #c4c2b5;
+  --pink: #f7a8b8;
   --transparent: transparent;
   --darkened-background: rgba(0, 0, 0, 0.5);
   --dark-shadow: rgba(0, 0, 0, 0.3);
@@ -31,8 +29,7 @@
   --light-shadow: rgba(0, 0, 0, 0.1);
 
   /* FONTS */
-  --font-family: 'Roboto', sans-serif;
-  --font-family-handwritten: 'Delicious Handrawn', cursive;
+  --font-family: "Montserrat", sans-serif;
   /* FONT SIZES */
   --font-size-title: 4rem;
   --font-size-subtitle: 1.3rem;
@@ -41,34 +38,37 @@
   --font-size-email: 2rem;
   --font-size-faq: 1.7rem;
   /* FONT WEIGHTS */
+  --font-weight-thin: 100;
+  --font-weight-extra-light: 200;
   --font-weight-light: 300;
   --font-weight-regular: 400;
-  --font-weight-semibold: 500;
-  --font-weight-bold: 600;
-  --font-weight-bolder: 700;
+  --font-weight-medium: 500;
+  --font-weight-semi-bold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extra-bold: 800;
+  --font-weight-black: 900;
 
   /* BORDER RADIUS */
   --border-radius-button: 10rem;
-  --border-radius-input: 0.7rem;
+  --border-radius-input: 1rem;
 
   /* TRANSITIONS */
   --fast-transition: 0.1s;
-  --transition: 0.3s;
+  --transition: 0.2s;
   --loading-transition: 1s;
   --slow-transition: 0.5s;
 
   /* TEXT SPACING */
-  --line-height: 1.3;
-  --letter-spacing: 0.022em;
+  --line-height: 1.5;
+  --letter-spacing: 0.02em;
 }
 
+/* DEFAULTS */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-/* DEFAULTS */
 
 body {
   background-color: var(--whitesmoke);
@@ -81,32 +81,28 @@ body {
   color: var(--black);
 }
 
-main {
-  position: relative;
-  overflow-x: hidden;
-}
-
 button {
   border-radius: var(--border-radius-button);
   outline: none;
   border: none;
   cursor: pointer;
-  transition: var(--transition);
-  color: var(--white);
-  background-color: var(--black);
   font-family: var(--font-family);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-semi-bold);
+  transition: var(--transition);
 }
 
-del {
-  text-decoration: line-through;
-  color: var(--red);
+button:hover {
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(1);
 }
 
 a,
 a:visited {
   text-decoration: none;
-  color: #06c;
+  color: var(--blue);
 }
 
 a:hover {
@@ -120,31 +116,32 @@ ul {
 
 input {
   outline: none;
-  border: 1px solid rgba(224, 224, 224, 0.5);
+  border: none;
+  box-shadow: 0 0 0 1px var(--shadow);
   border-radius: var(--border-radius-input);
-  font-weight: var(--font-weight-regular);
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   font-family: var(--font-family);
+  font-weight: var(--font-weight-light);
   transition: var(--transition);
 }
 
 input:focus-visible {
-  transition: var(--transition);
-  box-shadow: 0 0 0 0.1rem var(--transparent-blue);
+  box-shadow: 0 0 0 0.2rem var(--transparent-teal);
 }
 
 textarea {
   outline: none;
-  border: 1px solid rgba(224, 224, 224, 0.5);
+  border: none;
+  box-shadow: 0 0 0 1px var(--shadow);
   border-radius: var(--border-radius-input);
-  font-weight: var(--font-weight-regular);
+  padding: 1rem;
   font-family: var(--font-family);
+  font-weight: var(--font-weight-light);
   transition: var(--transition);
 }
 
 textarea:focus-visible {
-  transition: var(--transition);
-  box-shadow: 0 0 0 0.1rem var(--transparent-blue);
+  box-shadow: 0 0 0 0.2rem var(--transparent-teal);
 }
 
 /* COOKIES */
@@ -170,37 +167,14 @@ textarea:focus-visible {
 
 #cookies p {
   width: 500px;
-  font-size: var(--font-size-text);
   font-weight: var(--font-weight-light);
   color: var(--black);
 }
 
 #cookies button {
-  min-width: 100px;
-  height: 40px;
-  font-size: var(--font-size-text);
-  font-weight: var(--font-weight-light);
+  padding: 0.5rem 1.5rem;
   color: var(--white);
-  background-color: var(--blue);
-}
-
-/* FOOTER */
-footer {
-  width: 100%;
-  height: 50px;
-  background-color: var(--black);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-footer p {
-  font-size: 1.1rem;
-  font-weight: var(--font-weight-light);
-  text-align: center;
-  color: var(--white);
+  background-color: var(--teal);
 }
 
 /* MEDIA QUERIES */
@@ -228,15 +202,5 @@ footer p {
     min-width: 100px;
     height: 30px;
     font-size: 0.9rem;
-  }
-
-  footer p {
-    font-size: 1rem;
-  }
-}
-
-@media (width < 600px) {
-  footer p {
-    font-size: 0.7rem;
   }
 }

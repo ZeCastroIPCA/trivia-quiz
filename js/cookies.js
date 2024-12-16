@@ -1,18 +1,18 @@
-//on load of page
+// On load
 document.addEventListener('DOMContentLoaded', () => {
-  // check cookies
+  // Check cookies
   if (checkCookies()) {
-    // hide the cookies div
+    // Hide the cookies div
     document.getElementById('cookies').style.display = 'none';
   } else {
-    // show cookies div
+    // Show cookies div
     const cookies = document.getElementById('cookies');
     setTimeout(() => {
       cookies.style.bottom = '2rem';
     }, 1000);
   }
 
-  // detail the cookies we use in the website
+  // Detail the cookies we use in the website
   console.log('%cCookies we use:', 'font-weight: bold; font-size: 1rem;');
   console.log('');
   console.log('%cGoogle Analytics', 'font-weight: bold; font-size: 0.8rem;');
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('We do not store any user data. Thank you for visiting our website!');
 });
 
-// accept cookies
+// Accept cookies
 function acceptCookies() {
   localStorage.setItem('cookies', true);
   const cookies = document.getElementById('cookies');
@@ -37,7 +37,7 @@ function acceptCookies() {
   }, 500);
 }
 
-// check if cookies have been accepted
+// Check if cookies have been accepted
 function checkCookies() {
   const cookies = localStorage.getItem('cookies');
   if (cookies) {
@@ -46,7 +46,7 @@ function checkCookies() {
   return false;
 }
 
-//onclick of accept cookies button
+// On click of the accept cookies button
 const cookiesBtn = document.getElementById('cookies').getElementsByTagName('button')[0];
 cookiesBtn.addEventListener('click', acceptCookies);
 

@@ -23,21 +23,26 @@
     <link rel="stylesheet" href="css/defaults.css" />
     <link rel="stylesheet" href="css/main.css" />
     <!-- scripts -->
-    <script type="module" src="js/main.js"></script>
-    <!-- <script type="module" src="js/cookies.js"></script> -->
+    <script type="module" src="js/cookies.js"></script>
+    <script type="module" src="js/helper.js"></script>
+    <script type="module" src="js/game.js"></script>
   </head>
   <body>
-    <audio id="backgroundMusic" autoplay loop>
-      <source src="assets/sound/background_music.mp3" type="audio/mp3"/>
-    </audio>
-    <div class="container">
-      <div class="name-input">
-        <h1>What's your name?</h1>
-        <input type="text" id="playerName" />
-        <button id="btnStart">Start Game</button>
-      </div>
+    <div id="cookies">
+      <p>This website uses cookies to ensure you get the best experience on our website.</p>
+      <button>Ok</button>
     </div>
-    <div class="container1">
+    <audio id="backgroundMusic" autoplay loop>
+      <source src="assets/sound/background_music.mp3" type="audio/mp3" />
+    </audio>
+    <section id="container">
+      <div class="naming">
+        <h1>What's your name?</h1>
+        <input type="text" id="playerName" maxlength="15" placeholder="Simon Baker"/>
+        <button type="submit" id="startButton">Start Game</button>
+      </div>
+    </section>
+    <section id="container1">
       <div class="nav">
         <h1>TRIVIA QUIZ</h1>
         <button id="btnHigh">Highscores</button>
@@ -113,9 +118,9 @@
           </button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="container2">
+    <section id="container2">
       <div class="helpFromPublic">
         <h1 id="showPublic"></h1>
       </div>
@@ -144,9 +149,9 @@
         <button class="answer" id="answer3">C</button>
         <button class="answer" id="answer4">D</button>
       </div>
-    </div>
+    </section>
 
-    <div class="container3">
+    <section id="container3">
       <div class="nav3">
         <h1>HIGHSCORES</h1>
       </div>
@@ -160,6 +165,6 @@
       <div class="btnBack">
         <button id="btnExit">Back</button>
       </div>
-    </div>
+    </section>
   </body>
 </html>
