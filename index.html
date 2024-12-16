@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trivia Quiz</title>
+    <link rel="stylesheet" href="css.css" />
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <audio autoplay>
+      <source src="sound/song.mp3" type="audio/mp3" />
+      Your browser does not support the audio element.
+    </audio>
+    <div class="container">
+        <div class="name-input">
+            <h1>Username</h1>
+            <input type="text" id="playerName" />
+            <button id="btnStart">START</button>
+        </div>
+    </div>
+    <div class="container1">
+        <div class="nav">
+            <h1>TRIVIA QUIZ</h1>
+            <button id="btnHigh">Highscores</button>
+        </div>
+        <div class="text-bar">
+            <h1>SELECT A CATEGORY</h1>
+        </div>
+        <div class="category">
+            <div class="col">
+                <button class="cat" value="9">
+            <img src="images/worldwide.png" />
+          </button>
+                <button class="cat" value="10">
+            <img src="images/open-book.png" />
+          </button>
+                <button class="cat" value="11">
+            <img src="images/clapperboard.png" />
+          </button>
+                <button class="cat" value="12">
+            <img src="images/music-note.png" />
+          </button>
+                <button class="cat" value="13">
+            <img src="images/theater.png" />
+          </button>
+                <button class="cat" value="14">
+            <img src="images/television.png" />
+          </button>
+            </div>
+            <div class="col">
+                <button class="cat" value="15">
+            <img src="images/console.png" />
+          </button>
+                <button class="cat" value="16">
+            <img src="images/strategy.png" />
+          </button>
+                <button class="cat" value="17"><img src="images/herb.png" /></button>
+                <button class="cat" value="18"><img src="images/pc.png" /></button>
+                <button class="cat" value="19"><img src="images/keys.png" /></button>
+                <button class="cat" value="20">
+            <img src="images/helmet.png" />
+          </button>
+            </div>
+            <div class="col">
+                <button class="cat" value="21">
+            <img src="images/trophy.png" />
+          </button>
+                <button class="cat" value="22"><img src="images/map.png" /></button>
+                <button class="cat" value="23">
+            <img src="images/museum.png" />
+          </button>
+                <button class="cat" value="24">
+            <img src="images/conference.png" />
+          </button>
+                <button class="cat" value="25">
+            <img src="images/paint-palette.png" />
+          </button>
+                <button class="cat" value="26"><img src="images/oscar.png" /></button>
+            </div>
+            <div class="col">
+                <button class="cat" value="27"><img src="images/dog.png" /></button>
+                <button class="cat" value="28"><img src="images/car.png" /></button>
+                <button class="cat" value="29">
+            <img src="images/batman.png" />
+          </button>
+                <button class="cat" value="30">
+            <img src="images/tablet.png" />
+          </button>
+                <button class="cat" value="31">
+            <img src="images/shinto.png" />
+          </button>
+                <button class="cat" value="32">
+            <img src="images/raphael.png" />
+          </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container2">
+        <div class="helpFromPublic">
+            <h1 id="showPublic"></h1>
+        </div>
+        <div class="time-bar">
+            <div id="timer"></div>
+            <div id="contador"></div>
+        </div>
+        <div class="nav2">
+            <div class="score">
+                <h1 id="shownome"></h1>
+                <h1 id="showpontos"></h1>
+            </div>
+            <div class="questionDiv">
+                <h1 id="question">Wait for the question...</h1>
+            </div>
+            <div class="helpBtn">
+                <button id="btnajuda">Ajuda Publico</button>
+                <button id="btn5050">50/50</button>
+            </div>
+        </div>
+        <div id="answerbuttons">
+            <button class="boolean" id="true">True</button>
+            <button class="boolean" id="false">False</button>
+            <button class="answer" id="answer1">A</button>
+            <button class="answer" id="answer2">B</button>
+            <button class="answer" id="answer3">C</button>
+            <button class="answer" id="answer4">D</button>
+        </div>
+    </div>
+
+    <div class="container3">
+        <div class="nav3">
+            <h1>HIGHSCORES</h1>
+        </div>
+        <div class="classificacao">
+            <div class="caps">
+                <h1>Nome</h1>
+                <h1>Pontos</h1>
+                <h1>Categoria</h1>
+            </div>
+        </div>
+        <div class="btnBack">
+            <button id="btnExit">Back</button>
+        </div>
+    </div>
+
+    <script src="js.js"></script>
+</body>
+
+</html>
