@@ -1,3 +1,19 @@
+// On load
+document.addEventListener('DOMContentLoaded', function () {
+  // Set the background music volume lower
+  const audio = document.getElementById('backgroundMusic');
+  audio.volume = 0.5;
+
+  // Only show Highscores link if there are highscores
+  const highscores = JSON.parse(localStorage.getItem('highscores'));
+  const highscoresLink = document.getElementById('highscoresLink');
+  const highscoresButton = document.getElementById('highscoresButton');
+  if (highscores) {
+    highscoresLink.style.display = 'block';
+    highscoresButton.style.display = 'block';
+  }
+});
+
 // Defining the different containers
 const container1 = document.getElementById('container');
 const container2 = document.getElementById('container2');
@@ -24,6 +40,14 @@ startButton.addEventListener('click', () => {
   } else {
     alert('Please enter a valid name!');
   }
+});
+
+// Hide Naming Container and Show Highscores Container
+highscoresLink.addEventListener('click', () => {
+  container1.style.display = 'none';
+  container2.style.display = 'none';
+  container3.style.display = 'none';
+  container4.style.display = 'flex';
 });
 
 // CONTAINER 2
@@ -53,18 +77,61 @@ categories.addEventListener('click', async (event) => {
   }
 });
 
+// Hide Categories Container and Show Highscores Container
+highscoresButton.addEventListener('click', () => {
+  container1.style.display = 'none';
+  container2.style.display = 'none';
+  container3.style.display = 'none';
+  container4.style.display = 'flex';
+});
+
 // CONTAINER 3
-// Defining the question, the timer and the buttons
+// Defining the question element and timer element
 const questionElement = document.getElementById('question');
 const timerElement = document.getElementById('timer');
+
+// Defining the help buttons and help text
 const halfButton = document.getElementById('halfButton');
 const publicHelpButton = document.getElementById('publicHelpButton');
+const publicHelpText = document.getElementById('publicHelpText');
+
+// Defining the true and false buttons
 const trueButton = document.getElementById('trueButton');
 const falseButton = document.getElementById('falseButton');
+
+// Defining the answer buttons
+var answerButtons = document.getElementsByClassName('answer');
+
+// Player Object
+var playerData = {
+  name: '',
+  score: 0,
+};
+
+// Highscore Object
+var highscore = {
+  name: '',
+  score: 0,
+  category: '',
+};
+
+// Player Score and Name Elements
 const playerScore = document.getElementById('playerScore');
 const playerName = document.getElementById('playerName');
-const publicHelpText = document.getElementById('publicHelpText');
+
+// Current Question being displayed
 var currentQuestion = 0;
+
+// Index of the correct answer
+var correctAnswerIndex = null;
+
+// Hide Question Container and Show Naming Container
+backButton.addEventListener('click', () => {
+  container1.style.display = 'flex';
+  container2.style.display = 'none';
+  container3.style.display = 'none';
+  container4.style.display = 'none';
+});
 
 // Timer
 var timer;
@@ -86,59 +153,59 @@ function timerCountdown() {
 
 // Check if the question is true or false or multiple choice
 function nextQuestion() {
-  // Recomeçar o timer
+  // Clear and Start the timer
   clearInterval(timer);
   timerCountdown();
-  // Barra que funciona de Timer
+
+  // Clear the Time Bar that displays the countdown
   timerElement.classList.remove('time-bar-child');
-  //Mostrar os pontos atuais
-  playerScore.innerHTML = scoreFinal.pontos;
-  playerName.innerHTML = scoreFinal.nome;
-  //Repete ate chegar ás 10 perguntas
+
+  // Update the player data
+  playerScore.innerHTML = playerData.score;
+  playerName.innerHTML = playerData.name;
+
+  // Check the type of question
   if (currentQuestion < 10) {
     if (quiz[currentQuestion].type == 'boolean') {
-      trueFalse();
+      trueFalseQuestion();
     } else if (quiz[currentQuestion].type == 'multiple') {
-      quizMultiple();
+      multipleQuestion();
     }
   } else {
-    //Depois das 10 perguntas chama a funçao fim de jogo
-    fimJogo();
-    for (var i = 0; i < btnanswer.length; i++) {
-      btnanswer[i].disabled = true;
+    // After the last question, end the game
+    endGame();
+    for (var i = 0; i < answerButtons.length; i++) {
+      answerButtons[i].disabled = true;
     }
   }
+
+  // Reset the timer bar
   timerElement.classList.add('time-bar-child');
+
+  // Clear the public help text
   publicHelpText.style.display = 'none';
 }
 
-//Objeto Jogador , com os seus atribuitos
-var scoreFinal = {
-  nome: '',
-  pontos: 0,
-};
-
-var highscore = {
-  nome: 'Tiago',
-  maxScore: 40,
-  category: 'Entertainment: Books',
-};
-
-//Funçao de perguntas true ou false
-// Baralhamento auto-incrementado sem necessidade de randomizar
-function trueFalse() {
-  const booleanQuestions = document.querySelectorAll('.boolean');
-  booleanQuestions.forEach((question) => {
-    question.style.display = 'true';
+// True or False Question
+function trueFalseQuestion() {
+  // Show the true and false buttons
+  const booleanAnswers = document.querySelectorAll('.boolean');
+  booleanAnswers.forEach((question) => {
+    question.style.display = 'block';
   });
-  const answerQuestions = document.querySelectorAll('.answer');
-  answerQuestions.forEach((question) => {
+  // Hide the multiple choice buttons
+  const multipleAnswers = document.querySelectorAll('.answer');
+  multipleAnswers.forEach((question) => {
     question.style.display = 'none';
   });
+
+  // Hide the half button
   halfButton.display = 'none';
-  //atribuir a pergunta ao respetivo campo
+
+  // Display the question
   questionElement.innerHTML = quiz[currentQuestion].question;
-  //atribuir a resposta ao respetivo campo, Fazendo com que a opçao true fique sempre na msm posiçao independetemente se é a correta
+
+  // Display the correct answer in the correct button
   if (quiz[currentQuestion].correct_answer == 'True') {
     trueButton.innerHTML = quiz[currentQuestion].correct_answer;
     falseButton.innerHTML = quiz[currentQuestion].incorrect_answers[0];
@@ -147,111 +214,118 @@ function trueFalse() {
     falseButton.innerHTML = quiz[currentQuestion].correct_answer;
   }
 }
-// Caso o jogador escolha true
+
+// When the player chooses true
 trueButton.addEventListener('click', trueChoice);
 
+// True Choice Function
 function trueChoice() {
+  // Compare the answer with the correct
   if (quiz[currentQuestion].correct_answer == 'True') {
-    console.log('Acertou Miseravi');
-    changeColor(2);
-    // Incrementar pontos
-    scoreFinal.pontos += 10;
+    console.log('✅ True');
+    // Increment score if the answer is correct
+    playerData.score += 10;
+    // Display correct answer bar
+    changeTimeBarColor(2);
   } else {
-    console.log('Errooooou');
-    changeColor(1);
+    console.log('❌ True');
+    // Display incorrect answer bar
+    changeTimeBarColor(1);
   }
-  //Avançar para a proxima pergunta
+
+  // Go to the next question
   currentQuestion++;
   nextQuestion();
 }
-// Caso o jogador escolha False
+
+// When the player chooses false
 falseButton.addEventListener('click', falseChoice);
 
+// False Choice Function
 function falseChoice() {
+  // Compare the answer with the correct
   if (quiz[currentQuestion].correct_answer == 'False') {
-    console.log('Acertou');
-    scoreFinal.pontos += 10;
-    changeColor(2);
+    console.log('✅ False');
+    // Increment score if the answer is correct
+    playerData.score += 10;
+    // Display correct answer bar
+    changeTimeBarColor(2);
   } else {
-    console.log('Errooooou');
-    changeColor(1);
+    console.log('❌ False');
+    // Display incorrect answer bar
+    changeTimeBarColor(1);
   }
+
+  // Go to the next question
   currentQuestion++;
   nextQuestion();
 }
 
-// VARIAVEL COM TODOS OS BOTOES DE CLASS ANSWER PARA A QUESTAO DE RANDOMIZAR AS RESPOSTAS
-var btnanswer = document.getElementsByClassName('answer');
-var e = '';
-var questionIndex = null;
-
-function quizMultiple() {
-  const booleanQuestions = document.querySelectorAll('.boolean');
-  booleanQuestions.forEach((question) => {
+// Multiple Choice Question
+function multipleQuestion() {
+  // Hide the true and false buttons
+  const booleanAnswers = document.querySelectorAll('.boolean');
+  booleanAnswers.forEach((question) => {
     question.style.display = 'none';
   });
-  const answerQuestions = document.querySelectorAll('.answer');
-  answerQuestions.forEach((question) => {
+  // Show the multiple choice buttons
+  const multipleAnswers = document.querySelectorAll('.answer');
+  multipleAnswers.forEach((question) => {
     question.style.display = 'block';
   });
-  //atribuir a pergunta ao respetivo campo
+
+  // Display the question
   questionElement.innerHTML = quiz[currentQuestion].question;
-  // Juntar todas as respostas num array
+
+  // Create an array with all the answers
   var arr = [
     quiz[currentQuestion].correct_answer,
     quiz[currentQuestion].incorrect_answers[0],
     quiz[currentQuestion].incorrect_answers[1],
     quiz[currentQuestion].incorrect_answers[2],
   ];
-  // randomizar as respostas
+
+  // Randomize the answers
   let random;
   for (var i = 0; i < 4; i++) {
     random = Math.floor(Math.random() * arr.length);
-    // atribuir cada resposta a um botao
-    // O splice usa o numero random gerado para dar display na informaçao do botao e elimina este numero do array
-    btnanswer[i].innerHTML = arr.splice(random, 1);
-    if (btnanswer[i].innerText == quiz[currentQuestion].correct_answer) {
-      // registar a opçao correta numa variavel global
-      questionIndex = i;
+    answerButtons[i].innerHTML = arr.splice(random, 1);
+    if (answerButtons[i].innerText == quiz[currentQuestion].correct_answer) {
+      correctAnswerIndex = i;
     }
   }
 }
-//Atribuir uma funçao quando cada botao é clickado com uma variavel para guardar qual botao foi clickado
+
+// Check Multiple Answer
 var choiceButton = null;
-btnanswer[0].addEventListener('click', () => {
-  choiceButton = 0;
-  verificaResposta();
-});
-btnanswer[1].addEventListener('click', () => {
-  choiceButton = 1;
-  verificaResposta();
-});
-btnanswer[2].addEventListener('click', () => {
-  choiceButton = 2;
-  verificaResposta();
-});
-btnanswer[3].addEventListener('click', () => {
-  choiceButton = 3;
-  verificaResposta();
+Array.from(answerButtons).forEach((answer, index) => {
+  answer.addEventListener('click', () => {
+    choiceButton = index;
+    checkMultipleAnswer();
+  });
 });
 
-function verificaResposta() {
-  //Vericaçao se a resposta escolhida está correta
-  if (btnanswer[choiceButton].innerText == quiz[currentQuestion].correct_answer) {
-    console.log('Acertou multiple');
-    //A cada resposta o jogador ganha 10 pontos
-    scoreFinal.pontos += 10;
-    changeColor(2);
+// Check Multiple Answer Function
+function checkMultipleAnswer() {
+  // Compare the answer with the correct answer
+  if (answerButtons[choiceButton].innerText == quiz[currentQuestion].correct_answer) {
+    console.log('✅ Multiple');
+    // Increment score if the answer is correct
+    playerData.score += 10;
+    // Display correct answer bar
+    changeTimeBarColor(2);
   } else {
-    console.log('Errou multiple');
-    changeColor(1);
+    console.log('❌ Multiple');
+    // Display incorrect answer bar
+    changeTimeBarColor(1);
   }
   //Estando a resposta correta ou nao avança para a proxima pergunta
   currentQuestion++;
   nextQuestion();
 }
 
-function changeColor(num) {
+// Change the color of the time bar depending on the answer (correct or incorrect)
+function changeTimeBarColor(num) {
   var num;
   var timeBar = document.querySelector('.time-bar-child');
   if (num == 1) {
@@ -264,102 +338,114 @@ function changeColor(num) {
   }, 250);
 }
 
-// Botao de Ajuda do Publico , randomiza um numero de 50 ate 97 e diz que "x" percentagem de pessoas escolheu a opçao correta
-publicHelpButton.addEventListener('click', ajudaPublico);
+// Public Help Button Click
+publicHelpButton.addEventListener('click', publicHelp);
 
-function ajudaPublico() {
-  let ajuda;
-  ajuda = Math.floor(Math.random() * 47) + 50;
+// Public Help Function
+function publicHelp() {
+  // Get a random number between 50 and 97
+  let help;
+  help = Math.floor(Math.random() * 47) + 50;
+
+  // Display the public help text
   publicHelpText.style.display = 'block';
   publicHelpText.innerHTML =
-    ajuda + '% do publico respondeu ' + quiz[currentQuestion].correct_answer;
-  console.log(ajuda + '% do publico respondeu ' + quiz[currentQuestion].correct_answer);
+    help + '% do publico respondeu ' + quiz[currentQuestion].correct_answer;
+
+  // Disable the public help button
   publicHelpButton.disabled = true;
 }
 
-// Botao para eliminar duas respostas erradas
-halfButton.addEventListener('click', ajudaHalf);
+// Half Help Button Click
+halfButton.addEventListener('click', halfHelp);
 
-function ajudaHalf() {
+// Half Help Function
+function halfHelp() {
+  // Hide two random buttons
   var nums = new Set();
   while (nums.size !== 2) {
     let n = Math.floor(Math.random() * 3);
-    if (n != questionIndex) {
+    if (n != correctAnswerIndex) {
       nums.add(n);
     }
   }
   for (var elem of nums) {
-    btnanswer[elem].style.display = 'none';
+    answerButtons[elem].style.display = 'none';
   }
-  document.getElementById('halfButton').disabled = true;
+  halfButton.disabled = true;
 }
 
-exitButton.addEventListener('click', () => {
-  document.querySelector('.container3').style.display = 'none';
-  document.querySelector('.container1').style.display = 'flex';
-});
+// Player has set a new highscore
+var newRecord = false;
 
-highscoresButton.addEventListener('click', () => {
-  document.querySelector('.container1').style.display = 'none';
-  document.querySelector('.container3').style.display = 'flex';
-});
-
-//atualizar a tabela de classificação
-function updateTable() {
-  window.localStorage.setItem(highscore.nome, JSON.stringify(highscore));
-  if (verify == true) {
-    var newScore = document.createElement('div');
-    newScore.setAttribute('class', 'caps2');
-    let nomeNewScore = document.createElement('h2');
-    let pontosNewScore = document.createElement('h2');
-    let categoryNewScore = document.createElement('h2');
-    if (highscore.nome == JSON.parse(window.localStorage.getItem(scoreFinal.nome)).nome) {
-      nomeNewScore.innerText = highscore.nome;
-      pontosNewScore.innerText = highscore.maxScore;
-      categoryNewScore.innerText = highscore.category;
-    } else {
-      newScore.setAttribute('class', 'caps2');
-
-      nomeNewScore.innerText = highscore.nome;
-      console.log(highscore.maxScore);
-
-      pontosNewScore.innerText = highscore.maxScore;
-
-      categoryNewScore.innerText = highscore.category;
-    }
-
-    document.querySelector('.classificacao').appendChild(newScore);
-    newScore.appendChild(nomeNewScore);
-    newScore.appendChild(pontosNewScore);
-    newScore.appendChild(categoryNewScore);
-  }
-}
-
-var verify;
-//Funçao para o fim do jogo que entre outros para o timer
-function fimJogo() {
-  //Debugging ** console.log(scoreFinal.pontos);
-  // Condiçao - Se os pontos atuais forem superiores ao maxScore anterior o maxScore fica com os pontos atuais
-  if (scoreFinal.pontos > highscore.maxScore || highscore.category != quiz[0].category) {
-    highscore.maxScore = scoreFinal.pontos;
-    highscore.nome = scoreFinal.nome;
+// Check if the player has the highest score
+function endGame() {
+  // Update the player data if the score is higher than the highscore
+  if (playerData.score > highscore.score || highscore.category != quiz[0].category) {
+    // Update the highscore object
+    highscore.score = playerData.score;
+    highscore.name = playerData.name;
     highscore.category = quiz[0].category;
-    window.localStorage.setItem(highscore.nome, JSON.stringify(highscore));
-    verify = true;
-    updateTable();
-  } else {
-    verify = false;
+
+    // Store the highscore in local storage
+    localStorage.setItem('highscores', JSON.stringify(highscore));
+
+    // Player has set a new highscore
+    newRecord = true;
+
+    // Update the highscore table
+    updateHighscoreTable();
   }
 
-  console.log('verify: ', verify);
-  console.log('categoria: ', highscore.category);
-  console.log('localstorage: ', JSON.parse(window.localStorage.getItem(scoreFinal.nome)).category);
-
-  // Delay de 1 segundo a esconder o container
+  // Hide the question container
   setTimeout(() => {
-    container2.style.display = 'none';
+    container3.style.display = 'none';
     container1.style.display = 'flex';
   }, 1000);
-  // Para o contador no fim do jogo
+
+  // Clear the timer
   clearInterval(timer);
+}
+
+// CONTAINER 4
+// Hide Highscores Container and Show Categories Container
+backButton.addEventListener('click', () => {
+  container1.style.display = 'none';
+  container2.style.display = 'flex';
+  container3.style.display = 'none';
+  container4.style.display = 'none';
+});
+
+// Update the highscore table
+function updateHighscoreTable() {
+  if (newRecord == true) {
+    var newScore = document.createElement('div');
+    newScore.setAttribute('class', 'caps2');
+    let nameRecord = document.createElement('h2');
+    let scoreRecord = document.createElement('h2');
+    let categoryRecord = document.createElement('h2');
+
+    // Get the highscores from local storage
+    let storedHighscores = localStorage.getItem('highscores');
+    storedHighscores = JSON.parse(storedHighscores);
+
+    // Check if the player is the same as the highscore
+    if (highscore.name != storedHighscores.name) {
+      newScore.setAttribute('class', 'caps2');
+    }
+
+    // Update the highscore table
+    nameRecord.innerText = highscore.name;
+    scoreRecord.innerText = highscore.score;
+    categoryRecord.innerText = highscore.category;
+
+    const highscoresTable = document.querySelector('.highscoresTable');
+    highscoresTable.appendChild(newScore);
+    newScore.appendChild(nameRecord);
+    newScore.appendChild(scoreRecord);
+    newScore.appendChild(categoryRecord);
+
+    // Reset the newRecord variable
+    newRecord = false;
+  }
 }
