@@ -1,451 +1,414 @@
-// On load
-document.addEventListener('DOMContentLoaded', function () {
-  // Set the background music volume lower
-  const audio = document.getElementById('backgroundMusic');
-  audio.volume = 0.5;
+class QuizGame {
+  constructor() {
+    this.DOM = {
+      containers: {
+        start: document.getElementById('container'),
+        categories: document.getElementById('container2'),
+        quiz: document.getElementById('container3'),
+        highscores: document.getElementById('container4'),
+      },
+      elements: {
+        startButton: document.getElementById('startButton'),
+        startName: document.getElementById('startName'),
+        categories: document.querySelector('.categories'),
+        questionElement: document.getElementById('question'),
+        timerElement: document.getElementById('timer'),
+        playerScore: document.getElementById('playerScore'),
+        playerName: document.getElementById('playerName'),
+        trueButton: document.getElementById('trueButton'),
+        falseButton: document.getElementById('falseButton'),
+        answerButtons: document.getElementsByClassName('answer'),
+        halfButton: document.getElementById('halfButton'),
+        publicHelpButton: document.getElementById('publicHelpButton'),
+        publicHelpText: document.getElementById('publicHelpText'),
+        highscoresLink: document.getElementById('highscoresLink'),
+        highscoresButton: document.getElementById('highscoresButton'),
+        backButton: document.getElementById('backButton'),
+        backgroundMusic: document.getElementById('backgroundMusic'),
+        highscoresTable: document.querySelector('.highscoresTable'),
+      },
+    };
 
-  // Only show Highscores link if there are highscores
-  const highscores = JSON.parse(localStorage.getItem('highscores'));
-  const highscoresLink = document.getElementById('highscoresLink');
-  const highscoresButton = document.getElementById('highscoresButton');
-  if (highscores) {
-    highscoresLink.style.display = 'block';
-    highscoresButton.style.display = 'block';
+    this.state = {
+      playerData: { name: '', score: 0 },
+      highscore: { name: '', score: 0, category: '' },
+      quiz: null,
+      currentQuestion: 0,
+      correctAnswerIndex: null,
+      timer: null,
+      newRecord: false,
+      help: {
+        public: false,
+        half: false,
+      },
+    };
+
+    this.initializeGame();
   }
-});
 
-// Defining the different containers
-const container1 = document.getElementById('container');
-const container2 = document.getElementById('container2');
-const container3 = document.getElementById('container3');
-const container4 = document.getElementById('container4');
-
-// CONTAINER 1
-// Defining the start button and the player name input
-const startButton = document.getElementById('startButton');
-const startName = document.getElementById('startName');
-
-// Adding an event listener to the start button
-startButton.addEventListener('click', () => {
-  // Get the player name
-  const name = startName.value;
-
-  // If the player name is not empty
-  if (name) {
-    // Store the player name in local storage
-    localStorage.setItem('playerName', name);
-    // Change to the next container
-    container1.style.display = 'none';
-    container2.style.display = 'flex';
-  } else {
-    alert('Please enter a valid name!');
+  initializeGame() {
+    this.setupInitialState();
+    this.bindEventListeners();
   }
-});
 
-// Hide Naming Container and Show Highscores Container
-highscoresLink.addEventListener('click', () => {
-  container1.style.display = 'none';
-  container2.style.display = 'none';
-  container3.style.display = 'none';
-  container4.style.display = 'flex';
-});
+  setupInitialState() {
+    // Set background music volume
+    this.DOM.elements.backgroundMusic.volume = 0.5;
 
-// CONTAINER 2
-// Defining the categories container and the quiz object
-const categories = document.querySelector('.categories');
-var quiz = null;
-
-// Wait for click on one of the categories
-categories.addEventListener('click', async (event) => {
-  // Get the category id
-  const category = event.target.value;
-
-  // If the category id is not empty
-  if (category) {
-    // Fetch the questions from the API
-    const response = await fetch('https://opentdb.com/api.php?amount=10&category=' + category);
-
-    // Update the quiz object
-    quiz = await response.json();
-    quiz = quiz.results;
-    console.log(quiz);
-
-    // Change to the next container
-    container2.style.display = 'none';
-    container3.style.display = 'flex';
-    nextQuestion();
-  }
-});
-
-// Hide Categories Container and Show Highscores Container
-highscoresButton.addEventListener('click', () => {
-  container1.style.display = 'none';
-  container2.style.display = 'none';
-  container3.style.display = 'none';
-  container4.style.display = 'flex';
-});
-
-// CONTAINER 3
-// Defining the question element and timer element
-const questionElement = document.getElementById('question');
-const timerElement = document.getElementById('timer');
-
-// Defining the help buttons and help text
-const halfButton = document.getElementById('halfButton');
-const publicHelpButton = document.getElementById('publicHelpButton');
-const publicHelpText = document.getElementById('publicHelpText');
-
-// Defining the true and false buttons
-const trueButton = document.getElementById('trueButton');
-const falseButton = document.getElementById('falseButton');
-
-// Defining the answer buttons
-var answerButtons = document.getElementsByClassName('answer');
-
-// Player Object
-var playerData = {
-  name: '',
-  score: 0,
-};
-
-// Highscore Object
-var highscore = {
-  name: '',
-  score: 0,
-  category: '',
-};
-
-// Player Score and Name Elements
-const playerScore = document.getElementById('playerScore');
-const playerName = document.getElementById('playerName');
-
-// Current Question being displayed
-var currentQuestion = 0;
-
-// Index of the correct answer
-var correctAnswerIndex = null;
-
-// Hide Question Container and Show Naming Container
-backButton.addEventListener('click', () => {
-  container1.style.display = 'flex';
-  container2.style.display = 'none';
-  container3.style.display = 'none';
-  container4.style.display = 'none';
-});
-
-// Timer
-var timer;
-function timerCountdown() {
-  // Timer Settings
-  let timeleft = 20;
-
-  // Clear the timer when time is up and go to the next question
-  timer = setInterval(function () {
-    if (timeleft <= 0) {
-      clearInterval(timer);
-      currentQuestion++;
-      nextQuestion();
-    }
-    // Update the timer every second
-    timeleft--;
-  }, 1000);
-}
-
-// Check if the question is true or false or multiple choice
-function nextQuestion() {
-  // Clear and Start the timer
-  clearInterval(timer);
-  timerCountdown();
-
-  // Clear the Time Bar that displays the countdown
-  timerElement.classList.remove('time-bar-child');
-
-  // Update the player data
-  playerScore.innerHTML = playerData.score;
-  playerName.innerHTML = playerData.name;
-
-  // Check the type of question
-  if (currentQuestion < 10) {
-    if (quiz[currentQuestion].type == 'boolean') {
-      trueFalseQuestion();
-    } else if (quiz[currentQuestion].type == 'multiple') {
-      multipleQuestion();
-    }
-  } else {
-    // After the last question, end the game
-    endGame();
-    for (var i = 0; i < answerButtons.length; i++) {
-      answerButtons[i].disabled = true;
+    // Show highscores link conditionally
+    const highscores = JSON.parse(localStorage.getItem('highscores'));
+    if (highscores) {
+      this.DOM.elements.highscoresLink.style.display = 'block';
+      this.DOM.elements.highscoresButton.style.display = 'block';
     }
   }
 
-  // Reset the timer bar
-  timerElement.classList.add('time-bar-child');
+  bindEventListeners() {
+    // Start screen events
+    this.DOM.elements.startButton.addEventListener('click', () => this.handleStartGame());
+    this.DOM.elements.categories.addEventListener('click', (event) =>
+      this.handleCategorySelection(event)
+    );
 
-  // Clear the public help text
-  publicHelpText.style.display = 'none';
-}
+    // Navigation events
+    this.DOM.elements.highscoresLink.addEventListener('click', () => this.showHighscores());
+    this.DOM.elements.highscoresButton.addEventListener('click', () => this.showHighscores());
+    this.DOM.elements.backButton.addEventListener('click', () => this.resetToMainScreen());
 
-// True or False Question
-function trueFalseQuestion() {
-  // Show the true and false buttons
-  const booleanAnswers = document.querySelectorAll('.boolean');
-  booleanAnswers.forEach((question) => {
-    question.style.display = 'block';
-  });
-  // Hide the multiple choice buttons
-  const multipleAnswers = document.querySelectorAll('.answer');
-  multipleAnswers.forEach((question) => {
-    question.style.display = 'none';
-  });
+    // Answer buttons
+    this.DOM.elements.trueButton.addEventListener('click', () => this.handleBooleanAnswer(true));
+    this.DOM.elements.falseButton.addEventListener('click', () => this.handleBooleanAnswer(false));
 
-  // Hide the half button
-  halfButton.display = 'none';
+    Array.from(this.DOM.elements.answerButtons).forEach((answer, index) => {
+      answer.addEventListener('click', () => this.handleMultipleChoice(index));
+    });
 
-  // Display the question
-  questionElement.innerHTML = quiz[currentQuestion].question;
-
-  // Display the correct answer in the correct button
-  if (quiz[currentQuestion].correct_answer == 'True') {
-    trueButton.innerHTML = quiz[currentQuestion].correct_answer;
-    falseButton.innerHTML = quiz[currentQuestion].incorrect_answers[0];
-  } else {
-    trueButton.innerHTML = quiz[currentQuestion].incorrect_answers[0];
-    falseButton.innerHTML = quiz[currentQuestion].correct_answer;
-  }
-}
-
-// When the player chooses true
-trueButton.addEventListener('click', trueChoice);
-
-// True Choice Function
-function trueChoice() {
-  // Compare the answer with the correct
-  if (quiz[currentQuestion].correct_answer == 'True') {
-    console.log('✅ True');
-    // Increment score if the answer is correct
-    playerData.score += 10;
-    // Display correct answer bar
-    changeTimeBarColor(2);
-  } else {
-    console.log('❌ True');
-    // Display incorrect answer bar
-    changeTimeBarColor(1);
+    // Help buttons
+    this.DOM.elements.publicHelpButton.addEventListener('click', () => this.publicHelp());
+    this.DOM.elements.halfButton.addEventListener('click', () => this.halfHelp());
   }
 
-  // Go to the next question
-  currentQuestion++;
-  nextQuestion();
-}
-
-// When the player chooses false
-falseButton.addEventListener('click', falseChoice);
-
-// False Choice Function
-function falseChoice() {
-  // Compare the answer with the correct
-  if (quiz[currentQuestion].correct_answer == 'False') {
-    console.log('✅ False');
-    // Increment score if the answer is correct
-    playerData.score += 10;
-    // Display correct answer bar
-    changeTimeBarColor(2);
-  } else {
-    console.log('❌ False');
-    // Display incorrect answer bar
-    changeTimeBarColor(1);
-  }
-
-  // Go to the next question
-  currentQuestion++;
-  nextQuestion();
-}
-
-// Multiple Choice Question
-function multipleQuestion() {
-  // Hide the true and false buttons
-  const booleanAnswers = document.querySelectorAll('.boolean');
-  booleanAnswers.forEach((question) => {
-    question.style.display = 'none';
-  });
-  // Show the multiple choice buttons
-  const multipleAnswers = document.querySelectorAll('.answer');
-  multipleAnswers.forEach((question) => {
-    question.style.display = 'block';
-  });
-
-  // Display the question
-  questionElement.innerHTML = quiz[currentQuestion].question;
-
-  // Create an array with all the answers
-  var arr = [
-    quiz[currentQuestion].correct_answer,
-    quiz[currentQuestion].incorrect_answers[0],
-    quiz[currentQuestion].incorrect_answers[1],
-    quiz[currentQuestion].incorrect_answers[2],
-  ];
-
-  // Randomize the answers
-  let random;
-  for (var i = 0; i < 4; i++) {
-    random = Math.floor(Math.random() * arr.length);
-    answerButtons[i].innerHTML = arr.splice(random, 1);
-    if (answerButtons[i].innerText == quiz[currentQuestion].correct_answer) {
-      correctAnswerIndex = i;
+  handleStartGame() {
+    const name = this.DOM.elements.startName.value.trim();
+    if (name) {
+      this.state.playerData.name = name;
+      this.switchContainer(this.DOM.containers.categories);
+    } else {
+      alert('Please enter a valid name!');
     }
   }
-}
 
-// Check Multiple Answer
-var choiceButton = null;
-Array.from(answerButtons).forEach((answer, index) => {
-  answer.addEventListener('click', () => {
-    choiceButton = index;
-    checkMultipleAnswer();
-  });
-});
-
-// Check Multiple Answer Function
-function checkMultipleAnswer() {
-  // Compare the answer with the correct answer
-  if (answerButtons[choiceButton].innerText == quiz[currentQuestion].correct_answer) {
-    console.log('✅ Multiple');
-    // Increment score if the answer is correct
-    playerData.score += 10;
-    // Display correct answer bar
-    changeTimeBarColor(2);
-  } else {
-    console.log('❌ Multiple');
-    // Display incorrect answer bar
-    changeTimeBarColor(1);
-  }
-  //Estando a resposta correta ou nao avança para a proxima pergunta
-  currentQuestion++;
-  nextQuestion();
-}
-
-// Change the color of the time bar depending on the answer (correct or incorrect)
-function changeTimeBarColor(num) {
-  var num;
-  var timeBar = document.querySelector('.time-bar-child');
-  if (num == 1) {
-    timeBar.style.backgroundColor = 'lightcoral';
-  } else if (num == 2) {
-    timeBar.style.backgroundColor = 'palegreen';
-  }
-  setTimeout(() => {
-    timeBar.style.backgroundColor = 'rgba(0, 128, 128, 0.486)';
-  }, 250);
-}
-
-// Public Help Button Click
-publicHelpButton.addEventListener('click', publicHelp);
-
-// Public Help Function
-function publicHelp() {
-  // Get a random number between 50 and 97
-  let help;
-  help = Math.floor(Math.random() * 47) + 50;
-
-  // Display the public help text
-  publicHelpText.style.display = 'block';
-  publicHelpText.innerHTML =
-    help + '% do publico respondeu ' + quiz[currentQuestion].correct_answer;
-
-  // Disable the public help button
-  publicHelpButton.disabled = true;
-}
-
-// Half Help Button Click
-halfButton.addEventListener('click', halfHelp);
-
-// Half Help Function
-function halfHelp() {
-  // Hide two random buttons
-  var nums = new Set();
-  while (nums.size !== 2) {
-    let n = Math.floor(Math.random() * 3);
-    if (n != correctAnswerIndex) {
-      nums.add(n);
+  async handleCategorySelection(event) {
+    const category = event.target.value;
+    if (category) {
+      try {
+        const response = await fetch(`https://opentdb.com/api.php?amount=10&category=${category}`);
+        const data = await response.json();
+        this.state.quiz = data.results;
+        this.switchContainer(this.DOM.containers.quiz);
+        this.resetGameState();
+        this.nextQuestion();
+      } catch (error) {
+        console.error('Failed to fetch quiz questions:', error);
+        alert('Unable to load quiz. Please try again.');
+        this.resetToMainScreen();
+      }
     }
   }
-  for (var elem of nums) {
-    answerButtons[elem].style.display = 'none';
-  }
-  halfButton.disabled = true;
-}
 
-// Player has set a new highscore
-var newRecord = false;
-
-// Check if the player has the highest score
-function endGame() {
-  // Update the player data if the score is higher than the highscore
-  if (playerData.score > highscore.score || highscore.category != quiz[0].category) {
-    // Update the highscore object
-    highscore.score = playerData.score;
-    highscore.name = playerData.name;
-    highscore.category = quiz[0].category;
-
-    // Store the highscore in local storage
-    localStorage.setItem('highscores', JSON.stringify(highscore));
-
-    // Player has set a new highscore
-    newRecord = true;
-
-    // Update the highscore table
-    updateHighscoreTable();
+  resetGameState() {
+    this.state.currentQuestion = 0;
+    this.state.playerData.score = 0;
+    this.updatePlayerDisplay();
   }
 
-  // Hide the question container
-  setTimeout(() => {
-    container3.style.display = 'none';
-    container1.style.display = 'flex';
-  }, 1000);
+  startTimer() {
+    let timeLeft = 20;
+    this.clearPreviousTimer();
 
-  // Clear the timer
-  clearInterval(timer);
-}
+    this.state.timer = setInterval(() => {
+      timeLeft--;
 
-// CONTAINER 4
-// Hide Highscores Container and Show Categories Container
-backButton.addEventListener('click', () => {
-  container1.style.display = 'none';
-  container2.style.display = 'flex';
-  container3.style.display = 'none';
-  container4.style.display = 'none';
-});
+      if (timeLeft <= 0) {
+        this.clearPreviousTimer();
+        this.handleTimeOut();
+      }
+    }, 1000);
+  }
 
-// Update the highscore table
-function updateHighscoreTable() {
-  if (newRecord == true) {
-    var newScore = document.createElement('div');
-    newScore.setAttribute('class', 'caps2');
-    let nameRecord = document.createElement('h2');
-    let scoreRecord = document.createElement('h2');
-    let categoryRecord = document.createElement('h2');
+  handleTimeOut() {
+    // Change time bar color to indicate time-out
+    this.changeTimeBarColor('timeout');
 
-    // Get the highscores from local storage
-    let storedHighscores = localStorage.getItem('highscores');
-    storedHighscores = JSON.parse(storedHighscores);
+    // Move to next question
+    this.moveToNextQuestion();
+  }
 
-    // Check if the player is the same as the highscore
-    if (highscore.name != storedHighscores.name) {
-      newScore.setAttribute('class', 'caps2');
+  clearPreviousTimer() {
+    if (this.state.timer) {
+      clearInterval(this.state.timer);
+      this.state.timer = null;
+    }
+    this.resetTimerBar();
+  }
+
+  createTimerBar() {
+    const timerBar = this.DOM.elements.timerElement;
+    const timeBarChild = document.createElement('div');
+    timeBarChild.classList.add('time-bar-child');
+    timerBar.appendChild(timeBarChild);
+  }
+
+  resetTimerBar() {
+    const timeBarChild = document.querySelector('.time-bar-child');
+
+    // If exists remove it
+    if (timeBarChild) {
+      timeBarChild.remove();
     }
 
-    // Update the highscore table
-    nameRecord.innerText = highscore.name;
-    scoreRecord.innerText = highscore.score;
-    categoryRecord.innerText = highscore.category;
+    // Then create a new one
+    this.createTimerBar();
+  }
 
-    const highscoresTable = document.querySelector('.highscoresTable');
-    highscoresTable.appendChild(newScore);
+  switchContainer(showContainer) {
+    Object.values(this.DOM.containers).forEach((container) => {
+      container.style.display = 'none';
+    });
+    showContainer.style.display = 'flex';
+  }
+
+  showHighscores() {
+    this.switchContainer(this.DOM.containers.highscores);
+  }
+
+  resetToMainScreen() {
+    this.switchContainer(this.DOM.containers.start);
+  }
+
+  updatePlayerDisplay() {
+    this.DOM.elements.playerScore.innerHTML = this.state.playerData.score;
+    this.DOM.elements.playerName.innerHTML = this.state.playerData.name;
+  }
+
+  nextQuestion() {
+    this.updatePlayerDisplay();
+    this.startTimer();
+
+    if (this.state.currentQuestion < 10) {
+      const currentQuizQuestion = this.state.quiz[this.state.currentQuestion];
+
+      this.resetQuestionDisplay();
+
+      if (currentQuizQuestion.type === 'boolean') {
+        this.setupBooleanQuestion(currentQuizQuestion);
+      } else if (currentQuizQuestion.type === 'multiple') {
+        this.setupMultipleChoiceQuestion(currentQuizQuestion);
+      }
+    } else {
+      this.endGame();
+    }
+  }
+
+  setupBooleanQuestion(question) {
+    const booleanAnswers = document.querySelectorAll('.boolean');
+    booleanAnswers.forEach((btn) => (btn.style.display = 'block'));
+
+    const multipleAnswers = document.querySelectorAll('.answer');
+    multipleAnswers.forEach((btn) => (btn.style.display = 'none'));
+
+    this.DOM.elements.questionElement.innerHTML = question.question;
+
+    if (question.correct_answer === 'True') {
+      this.DOM.elements.trueButton.innerHTML = 'True';
+      this.DOM.elements.falseButton.innerHTML = 'False';
+    } else {
+      this.DOM.elements.trueButton.innerHTML = 'False';
+      this.DOM.elements.falseButton.innerHTML = 'True';
+    }
+  }
+
+  setupMultipleChoiceQuestion(question) {
+    const multipleAnswers = document.querySelectorAll('.answer');
+    multipleAnswers.forEach((btn) => (btn.style.display = 'block'));
+
+    const booleanAnswers = document.querySelectorAll('.boolean');
+    booleanAnswers.forEach((btn) => (btn.style.display = 'none'));
+
+    this.DOM.elements.questionElement.innerHTML = question.question;
+
+    const allAnswers = [question.correct_answer, ...question.incorrect_answers];
+
+    // Shuffle answers
+    const shuffledAnswers = this.shuffleArray(allAnswers);
+
+    shuffledAnswers.forEach((answer, index) => {
+      multipleAnswers[index].innerHTML = answer;
+      if (answer === question.correct_answer) {
+        this.state.correctAnswerIndex = index;
+      }
+    });
+  }
+
+  shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  handleBooleanAnswer(isTrue) {
+    const currentQuestion = this.state.quiz[this.state.currentQuestion];
+    const isCorrect =
+      (isTrue && currentQuestion.correct_answer === 'True') ||
+      (!isTrue && currentQuestion.correct_answer === 'False');
+
+    this.processAnswer(isCorrect);
+  }
+
+  handleMultipleChoice(chosenIndex) {
+    const currentQuestion = this.state.quiz[this.state.currentQuestion];
+    const isCorrect =
+      this.DOM.elements.answerButtons[chosenIndex].innerHTML === currentQuestion.correct_answer;
+
+    this.processAnswer(isCorrect);
+  }
+
+  processAnswer(isCorrect) {
+    if (isCorrect) {
+      this.state.playerData.score += 10;
+      this.changeTimeBarColor('correct');
+    } else {
+      this.changeTimeBarColor('incorrect');
+    }
+
+    this.moveToNextQuestion();
+  }
+
+  moveToNextQuestion() {
+    // Increment question counter
+    this.state.currentQuestion++;
+
+    // Check if we've reached the end of questions
+    if (this.state.currentQuestion < 10) {
+      this.nextQuestion();
+    } else {
+      this.endGame();
+    }
+  }
+
+  resetQuestionDisplay() {
+    // Show/hide appropriate answer buttons
+    const booleanAnswers = document.querySelectorAll('.boolean');
+    const multipleAnswers = document.querySelectorAll('.answer');
+
+    booleanAnswers.forEach((btn) => (btn.style.display = 'none'));
+    multipleAnswers.forEach((btn) => {
+      btn.style.display = 'block';
+      btn.disabled = false;
+    });
+
+    this.DOM.elements.publicHelpText.style.display = 'none';
+    this.DOM.elements.publicHelpButton.disabled = false;
+    this.DOM.elements.halfButton.disabled = false;
+  }
+
+  changeTimeBarColor(type) {
+    const timeBar = this.DOM.elements.timerElement;
+
+    // Different color for timeout
+    switch (type) {
+      case 'correct':
+        timeBar.style.backgroundColor = 'palegreen';
+        break;
+        case 'incorrect':
+        timeBar.style.backgroundColor = 'red';
+        break;
+      case 'timeout':
+        timeBar.style.backgroundColor = 'orange';
+        break;
+    }
+
+    setTimeout(() => {
+      timeBar.style.backgroundColor = '';
+    }, 250);
+  }
+
+  publicHelp() {
+    const helpPercentage = Math.floor(Math.random() * 47) + 50;
+    const currentQuestion = this.state.quiz[this.state.currentQuestion];
+
+    this.DOM.elements.publicHelpText.style.display = 'block';
+    this.DOM.elements.publicHelpText.innerHTML = `${helpPercentage}% do público respondeu ${currentQuestion.correct_answer}`;
+
+    this.DOM.elements.publicHelpButton.disabled = true;
+  }
+
+  halfHelp() {
+    const multipleAnswers = document.querySelectorAll('.answer');
+    const correctAnswer = this.state.correctAnswerIndex;
+
+    const incorrectIndexes = Array.from({ length: 4 }, (_, i) => i)
+      .filter((i) => i !== correctAnswer)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 2);
+
+    incorrectIndexes.forEach((index) => {
+      multipleAnswers[index].style.display = 'none';
+    });
+
+    this.DOM.elements.halfButton.disabled = true;
+  }
+
+  endGame() {
+    this.checkAndUpdateHighscore();
+    this.clearPreviousTimer();
+
+    setTimeout(() => {
+      this.switchContainer(this.DOM.containers.quiz, this.DOM.containers.start);
+    }, 1000);
+  }
+
+  checkAndUpdateHighscore() {
+    const currentCategory = this.state.quiz[0].category;
+    const isNewHighscore =
+      this.state.playerData.score > this.state.highscore.score ||
+      this.state.highscore.category !== currentCategory;
+
+    if (isNewHighscore) {
+      this.state.highscore = {
+        name: this.state.playerData.name,
+        score: this.state.playerData.score,
+        category: currentCategory,
+      };
+
+      localStorage.setItem('highscores', JSON.stringify(this.state.highscore));
+      this.updateHighscoreTable();
+    }
+  }
+
+  updateHighscoreTable() {
+    const newScore = document.createElement('div');
+    newScore.classList.add('caps2');
+
+    const nameRecord = document.createElement('h2');
+    const scoreRecord = document.createElement('h2');
+    const categoryRecord = document.createElement('h2');
+
+    nameRecord.innerText = this.state.highscore.name;
+    scoreRecord.innerText = this.state.highscore.score;
+    categoryRecord.innerText = this.state.highscore.category;
+
     newScore.appendChild(nameRecord);
     newScore.appendChild(scoreRecord);
     newScore.appendChild(categoryRecord);
 
-    // Reset the newRecord variable
-    newRecord = false;
+    this.DOM.elements.highscoresTable.appendChild(newScore);
   }
 }
+
+// Initialize the game on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+  new QuizGame();
+});

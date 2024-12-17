@@ -17,6 +17,8 @@
   --yellow: #f5c518;
   --orange: #fc6e51;
   --teal: #19807b;
+  --dark-teal: #12605c;
+  --light-teal: #8ec0c080;
   --blue: #0071e3;
   --light-blue: #00a0e3;
   --purple: #ac92ec;
@@ -25,7 +27,7 @@
   --darkened-background: rgba(0, 0, 0, 0.5);
   --dark-shadow: rgba(0, 0, 0, 0.3);
   --shadow: rgba(0, 0, 0, 0.2);
-  --light-shadow: rgba(0, 0, 0, 0.1);
+  --light-shadow: rgba(0, 0, 0, 0.08);
   --selection: rgba(0, 0, 0, 0.05);
 
   /* FONTS */

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('');
   console.log('%cLocal Storage', 'font-weight: bold; font-size: 0.8rem;');
   console.log(
-    'We use local storage to store if the user has accepted the cookies previously, that way we do not show the cookies bar every time the user visits the website.'
+    'We use local storage to store if the user has accepted the cookies previously, that way we do not show the cookies bar every time the user visits the website. The data is stored in the user browser and is not sent to our servers.'
   );
   console.log('');
   console.log('We do not store any user data. Thank you for visiting our website!');
