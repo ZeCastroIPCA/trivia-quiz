@@ -32,6 +32,7 @@ class QuizGame {
     this.state = {
       playerData: { name: '', score: 0 },
       highscore: { name: '', score: 0, category: '' },
+      scores: [],
       quiz: null,
       currentQuestion: 0,
       correctAnswerIndex: null,
@@ -105,6 +106,7 @@ class QuizGame {
         const response = await fetch(`https://opentdb.com/api.php?amount=10&category=${category}`);
         const data = await response.json();
         this.state.quiz = data.results;
+        console.log(data.results[0].category);
         this.switchContainer(this.DOM.containers.quiz);
         this.resetGameState();
         this.nextQuestion();
@@ -179,6 +181,14 @@ class QuizGame {
   }
 
   showHighscores() {
+    // Load highscores and scores from local storage
+    const highscores = JSON.parse(localStorage.getItem('highscores'));
+    const scores = JSON.parse(localStorage.getItem('scores'));
+    if (highscores || scores) {
+      this.state.highscore = highscores;
+      this.state.scores = scores;
+      this.updateHighscoreTable();
+    }
     this.switchContainer(this.DOM.containers.highscores);
   }
 
@@ -205,8 +215,6 @@ class QuizGame {
       } else if (currentQuizQuestion.type === 'multiple') {
         this.setupMultipleChoiceQuestion(currentQuizQuestion);
       }
-    } else {
-      this.endGame();
     }
   }
 
@@ -322,7 +330,7 @@ class QuizGame {
       case 'correct':
         timeBar.style.backgroundColor = 'palegreen';
         break;
-        case 'incorrect':
+      case 'incorrect':
         timeBar.style.backgroundColor = 'red';
         break;
       case 'timeout':
@@ -366,12 +374,17 @@ class QuizGame {
     this.clearPreviousTimer();
 
     setTimeout(() => {
-      this.switchContainer(this.DOM.containers.quiz, this.DOM.containers.start);
+      this.switchContainer(this.DOM.containers.start);
     }, 1000);
   }
 
   checkAndUpdateHighscore() {
-    const currentCategory = this.state.quiz[0].category;
+    let currentCategory = this.state.quiz[0].category;
+    // Category can have "Science: Art" or "Entertainment: Video Games", if so, remove the part before the colon
+    const sanitizedCategory = currentCategory.includes(':');
+    if (sanitizedCategory) {
+      currentCategory = currentCategory.split(': ')[1];
+    }
     const isNewHighscore =
       this.state.playerData.score > this.state.highscore.score ||
       this.state.highscore.category !== currentCategory;
@@ -384,27 +397,27 @@ class QuizGame {
       };
 
       localStorage.setItem('highscores', JSON.stringify(this.state.highscore));
+      this.state.scores.push(this.state.highscore);
+      localStorage.setItem('scores', JSON.stringify(this.state.scores));
       this.updateHighscoreTable();
     }
   }
 
   updateHighscoreTable() {
-    const newScore = document.createElement('div');
-    newScore.classList.add('caps2');
+    // Update scores state from local storage
+    const scores = JSON.parse(localStorage.getItem('scores'));
+    // Create new score rows
+    const highscoresTable = this.DOM.elements.highscoresTable;
 
-    const nameRecord = document.createElement('h2');
-    const scoreRecord = document.createElement('h2');
-    const categoryRecord = document.createElement('h2');
-
-    nameRecord.innerText = this.state.highscore.name;
-    scoreRecord.innerText = this.state.highscore.score;
-    categoryRecord.innerText = this.state.highscore.category;
-
-    newScore.appendChild(nameRecord);
-    newScore.appendChild(scoreRecord);
-    newScore.appendChild(categoryRecord);
-
-    this.DOM.elements.highscoresTable.appendChild(newScore);
+    // For each score, create a new row
+    scores.forEach((score) => {
+      const tableRow = document.createElement('div');
+      tableRow.classList.add('table-row');
+      const h2 = document.createElement('h2');
+      h2.innerHTML = `${score.name} - ${score.score} - ${score.category}`;
+      tableRow.appendChild(h2);
+      highscoresTable.appendChild(tableRow);
+    });
   }
 }
 
