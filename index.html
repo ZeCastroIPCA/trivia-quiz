@@ -35,94 +35,131 @@
     <audio id="backgroundMusic" autoplay loop>
       <source src="assets/sound/background_music.mp3" type="audio/mp3" />
     </audio>
+
+    <!-- Naming Section -->
     <section id="container">
       <div class="naming">
+        <img src="assets/images/logo/icon.png" alt="Quiz Logo">
         <h1>What's your name?</h1>
-        <input type="text" id="playerName" maxlength="15" placeholder="Simon Baker"/>
+        <input type="text" id="startName" maxlength="15" placeholder="Simon Baker" />
         <button type="submit" id="startButton">Start Game</button>
-      </div>
-    </section>
-    <section id="container2">
-      <div class="nav">
-        <h1>TRIVIA QUIZ</h1>
-        <button id="btnHigh">Highscores</button>
-      </div>
-      <div class="text-bar">
-        <h1>SELECT A CATEGORY</h1>
-      </div>
-      <div class="category">
-        <div class="col">
-          <button class="cat" value="9">
-            <img src="assets/images/categories/worldwide.png" />
-          </button>
-          <button class="cat" value="10">
-            <img src="assets/images/categories/open-book.png" />
-          </button>
-          <button class="cat" value="11">
-            <img src="assets/images/categories/clapperboard.png" />
-          </button>
-          <button class="cat" value="12">
-            <img src="assets/images/categories/music-note.png" />
-          </button>
-          <button class="cat" value="13">
-            <img src="assets/images/categories/theater.png" />
-          </button>
-          <button class="cat" value="14">
-            <img src="assets/images/categories/television.png" />
-          </button>
-        </div>
-        <div class="col">
-          <button class="cat" value="15">
-            <img src="assets/images/categories/console.png" />
-          </button>
-          <button class="cat" value="16">
-            <img src="assets/images/categories/strategy.png" />
-          </button>
-          <button class="cat" value="17"><img src="assets/images/categories/herb.png" /></button>
-          <button class="cat" value="18"><img src="assets/images/categories/pc.png" /></button>
-          <button class="cat" value="19"><img src="assets/images/categories/keys.png" /></button>
-          <button class="cat" value="20">
-            <img src="assets/images/categories/helmet.png" />
-          </button>
-        </div>
-        <div class="col">
-          <button class="cat" value="21">
-            <img src="assets/images/categories/trophy.png" />
-          </button>
-          <button class="cat" value="22"><img src="assets/images/categories/map.png" /></button>
-          <button class="cat" value="23">
-            <img src="assets/images/categories/museum.png" />
-          </button>
-          <button class="cat" value="24">
-            <img src="assets/images/categories/conference.png" />
-          </button>
-          <button class="cat" value="25">
-            <img src="assets/images/categories/paint-palette.png" />
-          </button>
-          <button class="cat" value="26"><img src="assets/images/categories/oscar.png" /></button>
-        </div>
-        <div class="col">
-          <button class="cat" value="27"><img src="assets/images/categories/dog.png" /></button>
-          <button class="cat" value="28"><img src="assets/images/categories/car.png" /></button>
-          <button class="cat" value="29">
-            <img src="assets/images/categories/batman.png" />
-          </button>
-          <button class="cat" value="30">
-            <img src="assets/images/categories/tablet.png" />
-          </button>
-          <button class="cat" value="31">
-            <img src="assets/images/categories/shinto.png" />
-          </button>
-          <button class="cat" value="32">
-            <img src="assets/images/categories/raphael.png" />
-          </button>
-        </div>
+        <a id="highscoresLink">Personal Highscores</a>
       </div>
     </section>
 
+    <!-- Categories Section -->
+    <section id="container2">
+      <div class="nav">
+        <h1>TRIVIA QUIZ</h1>
+        <button id="highscoresButton">Highscores</button>
+      </div>
+      <div class="sub-nav">
+        <h2>Select a Category</h2>
+      </div>
+      <div class="categories">
+        <button value="9">
+          <img src="assets/images/categories/worldwide.png" />
+          <p>Geography</p>
+        </button>
+        <button value="10">
+          <img src="assets/images/categories/open-book.png" />
+          <p>History</p>
+        </button>
+        <button value="11">
+          <img src="assets/images/categories/clapperboard.png" />
+          <p>Movies</p>
+        </button>
+        <button value="12">
+          <img src="assets/images/categories/music-note.png" />
+          <p>Music</p>
+        </button>
+        <button value="13">
+          <img src="assets/images/categories/theater.png" />
+          <p>Theater</p>
+        </button>
+        <button value="14">
+          <img src="assets/images/categories/television.png" />
+          <p>TV Shows</p>
+        </button>
+        <button value="15">
+          <img src="assets/images/categories/console.png" />
+          <p>Games</p>
+        </button>
+        <button value="16">
+          <img src="assets/images/categories/strategy.png" />
+          <p>Sports</p>
+        </button>
+        <button value="17">
+          <img src="assets/images/categories/herb.png" />
+          <p>Science</p>
+        </button>
+        <button value="18">
+          <img src="assets/images/categories/pc.png" />
+          <p>Technology</p>
+        </button>
+        <button value="19">
+          <img src="assets/images/categories/keys.png" />
+          <p>Math</p>
+        </button>
+        <button value="20">
+          <img src="assets/images/categories/helmet.png" />
+          <p>General Knowledge</p>
+        </button>
+        <button value="21">
+          <img src="assets/images/categories/trophy.png" />
+          <p>Trivia</p>
+        </button>
+        <button value="22">
+          <img src="assets/images/categories/map.png" />
+          <p>Geography</p>
+        </button>
+        <button value="23">
+          <img src="assets/images/categories/museum.png" />
+          <p>History</p>
+        </button>
+        <button value="24">
+          <img src="assets/images/categories/conference.png" />
+          <p>Politics</p>
+        </button>
+        <button value="25">
+          <img src="assets/images/categories/paint-palette.png" />
+          <p>Art</p>
+        </button>
+        <button value="26">
+          <img src="assets/images/categories/oscar.png" />
+          <p>Celebrities</p>
+        </button>
+        <button value="27">
+          <img src="assets/images/categories/dog.png" />
+          <p>Animals</p>
+        </button>
+        <button value="28">
+          <img src="assets/images/categories/car.png" />
+          <p>Cars</p>
+        </button>
+        <button value="29">
+          <img src="assets/images/categories/batman.png" />
+          <p>Superheroes</p>
+        </button>
+        <button value="30">
+          <img src="assets/images/categories/tablet.png" />
+          <p>Technology</p>
+        </button>
+        <button value="31">
+          <img src="assets/images/categories/shinto.png" />
+          <p>Religion</p>
+        </button>
+        <button value="32">
+          <img src="assets/images/categories/raphael.png" />
+          <p>Mythology</p>
+        </button>
+      </div>
+    </section>
+
+    <!-- Game Section -->
     <section id="container3">
       <div class="helpFromPublic">
-        <h1 id="showPublic"></h1>
+        <h1 id="publicHelpText"></h1>
       </div>
       <div class="time-bar">
         <div id="timer"></div>
@@ -130,27 +167,28 @@
       </div>
       <div class="nav2">
         <div class="score">
-          <h1 id="shownome"></h1>
-          <h1 id="showpontos"></h1>
+          <h1 id="playerName"></h1>
+          <h1 id="playerScore"></h1>
         </div>
-        <div class="questionDiv">
+        <div class="question">
           <h1 id="question">Wait for the question...</h1>
         </div>
         <div class="helpBtn">
-          <button id="btnajuda">Ajuda Publico</button>
-          <button id="btn5050">50/50</button>
+          <button id="publicHelpButton">Ajuda Publico</button>
+          <button id="halfButton">50/50</button>
         </div>
       </div>
       <div id="answerbuttons">
-        <button class="boolean" id="true">True</button>
-        <button class="boolean" id="false">False</button>
-        <button class="answer" id="answer1">A</button>
-        <button class="answer" id="answer2">B</button>
-        <button class="answer" id="answer3">C</button>
-        <button class="answer" id="answer4">D</button>
+        <button class="boolean" id="trueButton">True</button>
+        <button class="boolean" id="falseButton">False</button>
+        <button class="answer" id="answer1Button">A</button>
+        <button class="answer" id="answer2Button">B</button>
+        <button class="answer" id="answer3Button">C</button>
+        <button class="answer" id="answer4Button">D</button>
       </div>
     </section>
 
+    <!-- Highscores Section -->
     <section id="container4">
       <div class="nav3">
         <h1>HIGHSCORES</h1>
@@ -163,7 +201,7 @@
         </div>
       </div>
       <div class="btnBack">
-        <button id="btnExit">Back</button>
+        <button id="exitButton">Back</button>
       </div>
     </section>
   </body>

@@ -17,7 +17,6 @@
   --yellow: #f5c518;
   --orange: #fc6e51;
   --teal: #19807b;
-  --transparent-teal: rgba(25, 128, 123, 0.5);
   --blue: #0071e3;
   --light-blue: #00a0e3;
   --purple: #ac92ec;
@@ -27,6 +26,7 @@
   --dark-shadow: rgba(0, 0, 0, 0.3);
   --shadow: rgba(0, 0, 0, 0.2);
   --light-shadow: rgba(0, 0, 0, 0.1);
+  --selection: rgba(0, 0, 0, 0.05);
 
   /* FONTS */
   --font-family: "Montserrat", sans-serif;
@@ -81,6 +81,10 @@ body {
   color: var(--black);
 }
 
+img {
+  pointer-events: none;
+}
+
 button {
   border-radius: var(--border-radius-button);
   outline: none;
@@ -102,7 +106,7 @@ button:active {
 a,
 a:visited {
   text-decoration: none;
-  color: var(--blue);
+  color: var(--teal);
 }
 
 a:hover {
@@ -126,7 +130,7 @@ input {
 }
 
 input:focus-visible {
-  box-shadow: 0 0 0 0.2rem var(--transparent-teal);
+  box-shadow: 0 0 0 0.2rem var(--teal);
 }
 
 textarea {
@@ -141,7 +145,7 @@ textarea {
 }
 
 textarea:focus-visible {
-  box-shadow: 0 0 0 0.2rem var(--transparent-teal);
+  box-shadow: 0 0 0 0.2rem var(--teal);
 }
 
 /* COOKIES */

@@ -15,10 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Detail the cookies we use in the website
   console.log('%cCookies we use:', 'font-weight: bold; font-size: 1rem;');
   console.log('');
-  console.log('%cGoogle Analytics', 'font-weight: bold; font-size: 0.8rem;');
-  console.log('https://policies.google.com/privacy');
-  console.log('We use Google Analytics to track the number of visitors of our website.');
-  console.log('');
   console.log('%cLocal Storage', 'font-weight: bold; font-size: 0.8rem;');
   console.log(
     'We use local storage to store if the user has accepted the cookies previously, that way we do not show the cookies bar every time the user visits the website.'
