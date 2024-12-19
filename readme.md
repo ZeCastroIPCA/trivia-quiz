@@ -12,5 +12,8 @@ I had it in my external SSD for a while and I thought it would be a good idea to
 3. Answer the questions
 4. Check your score
 
+### Where to play
+You can play the game [here](https://zecastroipca.github.io/Quiz/)!
+
 ## License
 Feel free to use this project for your own purposes, either commercially or non-commercially.
