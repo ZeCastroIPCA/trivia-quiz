@@ -27,18 +27,26 @@
     <script type="module" src="js/game.js"></script>
   </head>
   <body>
+    <!-- Cookies -->
     <div id="cookies">
       <p>This website uses cookies to ensure you get the best experience on our website.</p>
       <button>Ok</button>
     </div>
+
+    <!-- Sound Effects -->
     <audio id="backgroundMusic" autoplay loop>
       <source src="assets/sound/background_music.mp3" type="audio/mp3" />
     </audio>
 
+    <!-- Loading Animation -->
+    <div id="loading">
+      <div class="loading-bar"></div>
+    </div>
+
     <!-- Naming Section -->
     <section id="container">
       <div class="naming">
-        <img src="assets/images/logo/icon.png" alt="Quiz Logo">
+        <img src="assets/images/logo/icon.png" alt="Quiz Logo" />
         <h1>What's your name?</h1>
         <input type="text" id="startName" maxlength="15" placeholder="Simon Baker" />
         <button type="submit" id="startButton">Start Game</button>
@@ -176,8 +184,7 @@
         <h1>Highscores</h1>
         <button id="backButton">Back</button>
       </div>
-      <div class="highscoresTable">
-      </div>
+      <div class="highscoresTable"></div>
     </section>
   </body>
 </html>

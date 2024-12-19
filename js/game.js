@@ -8,6 +8,7 @@ class QuizGame {
         highscores: document.getElementById('container4'),
       },
       elements: {
+        loading: document.getElementById('loading'),
         startButton: document.getElementById('startButton'),
         startName: document.getElementById('startName'),
         categories: document.querySelector('.categories'),
@@ -103,6 +104,10 @@ class QuizGame {
     const category = event.target.value;
     if (category) {
       try {
+        // Show loading spinner
+        this.DOM.elements.loading.style.display = 'flex';
+
+        // Fetch quiz questions based on selected category
         const response = await fetch(`https://opentdb.com/api.php?amount=10&category=${category}`);
         const data = await response.json();
         this.state.quiz = data.results;
@@ -110,6 +115,9 @@ class QuizGame {
         this.switchContainer(this.DOM.containers.quiz);
         this.resetGameState();
         this.nextQuestion();
+
+        // Hide loading spinner
+        this.DOM.elements.loading.style.display = 'none';
       } catch (error) {
         console.error('Failed to fetch quiz questions:', error);
         alert('Unable to load quiz. Please try again.');
@@ -174,9 +182,12 @@ class QuizGame {
   }
 
   switchContainer(showContainer) {
+    // Hide all containers
     Object.values(this.DOM.containers).forEach((container) => {
       container.style.display = 'none';
     });
+
+    // Show the container we want to display
     showContainer.style.display = 'flex';
   }
 
@@ -373,8 +384,14 @@ class QuizGame {
     this.checkAndUpdateHighscore();
     this.clearPreviousTimer();
 
+    // Show loading spinner
+    this.DOM.elements.loading.style.display = 'flex';
+
     setTimeout(() => {
       this.switchContainer(this.DOM.containers.start);
+
+      // Hide loading spinner
+      this.DOM.elements.loading.style.display = 'none';
     }, 1000);
   }
 
