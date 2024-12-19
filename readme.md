@@ -1,9 +1,12 @@
 # Trivia Quiz
 ## Why did I make this?
-Initially, I made this project to learn HTML, CSS, and JavaScript. I wanted to create a simple quiz game that would test the user's knowledge on a variety of topics. I also wanted to create a project that would be fun and engaging for users to play. I chose to create a trivia quiz because I enjoy playing trivia games and thought it would be a fun project to work on.
+Initially, I made this project to learn HTML, CSS, and JavaScript. I wanted to create a simple quiz game that would test the user's knowledge on a variety of topics.
 
 ## Why only updated now?
 I had it in my external SSD for a while and I thought it would be a good idea to update it to my current standards.
+
+## What to expect from this project?
+This project is a very rudimentary quiz game that tests the user's knowledge on a variety of topics. Don't expect a full game with a lot of features, but rather a simple game. IT WILL NOT BE UPDATED EVER.
 
 ## Before you start
 ### How to play

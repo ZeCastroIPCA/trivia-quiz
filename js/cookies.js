@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show cookies div
     const cookies = document.getElementById('cookies');
     setTimeout(() => {
-      cookies.style.bottom = '2rem';
+      cookies.style.opacity = '1';
     }, 1000);
   }
 
@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function acceptCookies() {
   localStorage.setItem('cookies', true);
   const cookies = document.getElementById('cookies');
-  cookies.style.bottom = '-5rem';
+  cookies.style.bottom = '-6rem';
+  cookies.style.opacity = '0';
   setTimeout(() => {
     cookies.style.display = 'none';
   }, 500);

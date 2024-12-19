@@ -31,7 +31,7 @@ class QuizGame {
     };
 
     this.state = {
-      playerData: { name: '', score: 0 },
+      playerData: { name: '', score: 0, category: '' },
       highscore: { name: '', score: 0, category: '' },
       scores: [],
       quiz: null,
@@ -49,17 +49,20 @@ class QuizGame {
   }
 
   initializeGame() {
-    this.setupInitialState();
+    this.setBackgroundMusic();
+    this.getScoresFromLocalStorage();
     this.bindEventListeners();
   }
 
-  setupInitialState() {
+  setBackgroundMusic() {
     // Set background music volume
     this.DOM.elements.backgroundMusic.volume = 0.5;
+  }
 
-    // Show highscores link conditionally
-    const highscores = JSON.parse(localStorage.getItem('highscores'));
-    if (highscores) {
+  getScoresFromLocalStorage() {
+    // Show score link conditionally
+    const scores = JSON.parse(localStorage.getItem('scores'));
+    if (scores) {
       this.DOM.elements.highscoresLink.style.display = 'block';
       this.DOM.elements.highscoresButton.style.display = 'block';
     }
@@ -111,7 +114,6 @@ class QuizGame {
         const response = await fetch(`https://opentdb.com/api.php?amount=10&category=${category}`);
         const data = await response.json();
         this.state.quiz = data.results;
-        console.log(data.results[0].category);
         this.switchContainer(this.DOM.containers.quiz);
         this.resetGameState();
         this.nextQuestion();
@@ -182,6 +184,8 @@ class QuizGame {
   }
 
   switchContainer(showContainer) {
+    // Load highscores and scores from local storage
+    this.getScoresFromLocalStorage();
     // Hide all containers
     Object.values(this.DOM.containers).forEach((container) => {
       container.style.display = 'none';
@@ -313,7 +317,10 @@ class QuizGame {
     if (this.state.currentQuestion < 10) {
       this.nextQuestion();
     } else {
-      this.endGame();
+      // wait 250ms before ending the game to check for correct/incorrect color
+      setTimeout(() => {
+        this.endGame();
+      }, 250);
     }
   }
 
@@ -414,13 +421,24 @@ class QuizGame {
       };
 
       localStorage.setItem('highscores', JSON.stringify(this.state.highscore));
-      this.state.scores.push(this.state.highscore);
-      localStorage.setItem('scores', JSON.stringify(this.state.scores));
-      this.updateHighscoreTable();
     }
+    // Update scores state from local storage
+    this.state.scores = JSON.parse(localStorage.getItem('scores')) || [];
+
+    // Get current category
+    this.state.playerData.category = currentCategory;
+
+    // Add current player data to scores
+    this.state.scores.push(this.state.playerData);
+    localStorage.setItem('scores', JSON.stringify(this.state.scores));
+
+    this.updateHighscoreTable();
   }
 
   updateHighscoreTable() {
+    // Clear existing rows
+    this.DOM.elements.highscoresTable.innerHTML = '';
+
     // Update scores state from local storage
     const scores = JSON.parse(localStorage.getItem('scores'));
     // Create new score rows
@@ -431,7 +449,7 @@ class QuizGame {
       const tableRow = document.createElement('div');
       tableRow.classList.add('table-row');
       const h2 = document.createElement('h2');
-      h2.innerHTML = `${score.name} - ${score.score} - ${score.category}`;
+      h2.innerHTML = `${score.category}: ${score.score} playing as ${score.name}`;
       tableRow.appendChild(h2);
       highscoresTable.appendChild(tableRow);
     });
