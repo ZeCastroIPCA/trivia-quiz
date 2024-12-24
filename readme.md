@@ -16,7 +16,7 @@ This project is a very rudimentary quiz game that tests the user's knowledge on 
 4. Check your score
 
 ### Where to play
-You can play the game [here](https://zecastroipca.github.io/Quiz/)!
+You can play the game [here](https://zecastroipca.github.io/trivia-quiz/)!
 
 ## License
 Feel free to use this project for your own purposes, either commercially or non-commercially.
